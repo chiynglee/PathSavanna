@@ -1,0 +1,36 @@
+#! /bin/bash
+PROC_CTRL="/proc/net/xebra/linkctrl"
+if [ ! -f $PROC_CTRL ]; then
+	echo "ERROR: PathFinder on Vlink module is not found!"
+	exit 6
+fi
+if [ $# -lt 1 ]; then
+	echo "Virtual Link Control Script"
+	echo "--------------------------------------------------"
+	echo " * Usage: linkctrl [show|register|unregister|register_ipv4]"
+	echo " * See current status"
+	echo "          linkctrl show"
+	echo " * Register interface as PF"
+	echo "          linkctrl register [iface] [ipaddr] [vID]"
+	echo " * Unregister interface from PF"
+	echo "          linkctrl unregister [iface]"
+	echo " * Register ipv4"
+	echo "		linkctrl register_ipv4"
+	echo " "
+	exit 6
+fi
+case $1 in
+"show")
+	cat $PROC_CTRL
+	;;
+
+"register")
+	echo "REGISTER dev=$2 represent_ip=$3 vnet_id=$4" > $PROC_CTRL
+	;;
+"unregister")
+	echo "UNREGISTER dev=$2" > $PROC_CTRL
+	;;
+"register_ipv4")
+	echo "REGISTER_IPv4" > $PROC_CTRL
+	;;
+esac
